@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        call:
+            1.改变函数的this指向到第一个参数
+            2.调用函数
+
+            call的第一个参数分为3类
+                1.windo（null，undefiend）
+                2.包装对象（Boolean，string，number）
+                3.对象类型
+
+        */
+        Function.prototype.maCall=function(context){
+            //因为context如果不是一个对象类型，则需需要提前处理一下
+            if(context===null||context===undefiend){
+                //如果context是null或undefiend 则把context变成window
+                context=window;
+            }
+            if(typeof context!="object"&&typeof context!="function"){
+                //如果context是null或者undefined，则已经被上边的if变成了window
+                //如果是object则无法进入if 所以可以进入if的是基本类型值（不包含null和undefined）
+                //如果object（）方法可以把基本类型变成包装对象
+                context=Object(context);
+            }
+            //获取给调用myCall的函数传递参数
+            console.log(arguments);
+            //不要arguments的第一个值
+            //Array.from（）方法可以把伪数组转数组
+            var argArr=Array.from(arguments).slice(1);
+            console.log(argArr);
+            //当前myArr的this就是调用maCall的函数，把当前this所代表的函数fn中的this 指向context
+            //把当前myCall的this所代表的函数，当成contet对象的方法即可
+            //创建一个独一无二的值
+            var f=Date.now().toString(36);
+            context[f]=this;
+            //只要context调用了f方法，则f的this就是指向了context，因为f和fn是同一个函数，所以fn的this也是指向了context
+            //even可以将字符串的代码执行
+            eval("context[f]("+argArr.toString()+")");
+            //因为需要，给context扩展了一个f方法  现在方法已经不用了，则需要删除context的f方法
+            delete context[f];
+        }
+    </script>
+</body>
+</html>

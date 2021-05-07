@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        Function.protptype.maApply = function (context, argArr) {
+            //因为context如果不是一个对象类型，则需要提前处理一下
+            if (context === null || context === undefined) {
+                //如果context是null或undefiend 则需要提前处理一下
+                context = window;
+            }
+            if (typeof context != "object" && typeof context != "function") {
+                //如果context是null或者undefiend，则已经被上边的if变成window
+                //如果object则无法进入if 所以可以进入if的是基本类型值（不包含null和undefiend）
+                //使用object（）方法可以把基本类型变成包装对象
+                context = Object(context);
+
+            }
+
+            //当前myApply的this就是调用myApply的函数，把当前this所代表的函数fn中的this 指向context
+            //把当前myApply的this所代表的函数，当成context对象的方法即可
+            //所以给context扩展一个方法 值为this代表的函数
+            //创建一个独一无二的值
+
+            var f = Date.now().toString(36);
+            context[f] = this;
+            //只要context调用了f方法 现在f方法已经不用了，则需要删除context的f方法
+            delete context[f];
+        }
+    </script>
+</body>
+
+</html>
